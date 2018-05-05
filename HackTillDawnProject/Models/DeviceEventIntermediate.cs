@@ -9,6 +9,6 @@ namespace HackTillDawnProject.Models
     {
         public Guid IdEventId { get; set; }
         public Guid IdRegisteredDeviceId { get; set; }
-        //o
+        //osss
     }
 }
