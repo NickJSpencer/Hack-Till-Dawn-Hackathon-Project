@@ -9,18 +9,18 @@ namespace HackTillDawnProject.Models
     {
         public FootageStorage()
         {
-            FootageStored = new HashSet<FootageStorage>();
         }
+        //PK
         public Guid IdFootageStorage { get; set; }
-        public string DeviceName { get; set; }
-        public DateTime DateRegistered { get; set; }
+        //
+        public DateTime DateTimeCaptureStartUtc { get; set; }
+        public DateTime DateTimeCaptureEndUtc { get; set; }
+        public string Tags { get; set; }
+        public string TriggerDescription { get; set; }
+        public decimal TriggerConfidencePercent { get; set; }
+        public string FileLocation { get; set; }
+        public string FileName { get; set; }
 
-        public ApplicationUser RegisteredBy { get; set; }
-        public string RegisteredById { get; set; }
-
-
-
-        public ICollection<FootageStorage> FootageStored { get; set; }
 
     }
 }

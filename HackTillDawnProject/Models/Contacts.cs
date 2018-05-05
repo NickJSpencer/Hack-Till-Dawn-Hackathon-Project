@@ -7,6 +7,10 @@ namespace HackTillDawnProject.Models
 {
     public class Contact : DataRowProperty
     {
-
+        public Guid IdContact { get; set; }
+        public string Name { get; set; }
+        public string Role { get; set; }
+        public string PhoneNumber { get; set; }
+        public int? ComChannel { get; set; }
     }
 }
