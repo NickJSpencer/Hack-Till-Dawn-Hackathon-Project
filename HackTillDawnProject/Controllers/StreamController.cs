@@ -22,21 +22,9 @@ namespace HackTillDawnProject.Controllers
         { return View(); }
         public async Task<FileStreamResult> StreamMe(string footage_id)
         {
-            try
-            {
-                Guid footage_guid;
-                if (Guid.TryParse(footage_id, out footage_guid))
-                {
-                    FootageStorage Footage = _FootageStorageService.Get(footage_guid);
-                    byte[] stream = await System.IO.File.ReadAllBytesAsync(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Videos", Footage.FileName + ".mp4"));
-                    MemoryStream result = new MemoryStream(stream);
-
-                    return new FileStreamResult(result, "video/mp4");
-                }
-                else
-                {
-                    byte[] stream = await System.IO.File.ReadAllBytesAsync(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Videos", "not_found.mp4"));
-                    MemoryStream result = new MemoryStream(stream);
+            FootageStorage Footage = _FootageStorageService.
+            byte[] stream =  await System.IO.File.ReadAllBytesAsync(Path.Combine(Directory.GetCurrentDirectory(),"wwwroot", "Videos", "test.mp4"));
+            MemoryStream result = new MemoryStream(stream);
 
                     return new FileStreamResult(result, "video/mp4");
                 }
