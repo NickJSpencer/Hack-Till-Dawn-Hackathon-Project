@@ -30,6 +30,10 @@ namespace HackTillDawnProject.Data.Migrations
 
                     b.Property<DateTime>("DateCreatedUtc");
 
+                    b.Property<DateTime?>("DateFlaggedForDeletionUtc");
+
+                    b.Property<DateTime?>("DateInactivatedUtc");
+
                     b.Property<DateTime>("DateLastModifiedUtc");
 
                     b.Property<string>("Description");
@@ -103,9 +107,21 @@ namespace HackTillDawnProject.Data.Migrations
                     b.Property<Guid>("IdChannel")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("DateCreatedUtc");
+
+                    b.Property<DateTime?>("DateFlaggedForDeletionUtc");
+
+                    b.Property<DateTime?>("DateInactivatedUtc");
+
+                    b.Property<DateTime>("DateLastModifiedUtc");
+
                     b.Property<string>("Description");
 
                     b.Property<Guid>("EventId");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<bool>("IsDeleted");
 
                     b.Property<string>("Name");
 
@@ -122,6 +138,18 @@ namespace HackTillDawnProject.Data.Migrations
 
                     b.Property<Guid>("IdContactId");
 
+                    b.Property<DateTime>("DateCreatedUtc");
+
+                    b.Property<DateTime?>("DateFlaggedForDeletionUtc");
+
+                    b.Property<DateTime?>("DateInactivatedUtc");
+
+                    b.Property<DateTime>("DateLastModifiedUtc");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<bool>("IsDeleted");
+
                     b.HasKey("IdChannelId", "IdContactId");
 
                     b.HasIndex("IdContactId");
@@ -137,6 +165,10 @@ namespace HackTillDawnProject.Data.Migrations
                     b.Property<int?>("ComChannel");
 
                     b.Property<DateTime>("DateCreatedUtc");
+
+                    b.Property<DateTime?>("DateFlaggedForDeletionUtc");
+
+                    b.Property<DateTime?>("DateInactivatedUtc");
 
                     b.Property<DateTime>("DateLastModifiedUtc");
 
@@ -163,6 +195,10 @@ namespace HackTillDawnProject.Data.Migrations
 
                     b.Property<DateTime>("DateCreatedUtc");
 
+                    b.Property<DateTime?>("DateFlaggedForDeletionUtc");
+
+                    b.Property<DateTime?>("DateInactivatedUtc");
+
                     b.Property<DateTime>("DateLastModifiedUtc");
 
                     b.Property<string>("DeviceLocation");
@@ -184,6 +220,10 @@ namespace HackTillDawnProject.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("DateCreatedUtc");
+
+                    b.Property<DateTime?>("DateFlaggedForDeletionUtc");
+
+                    b.Property<DateTime?>("DateInactivatedUtc");
 
                     b.Property<DateTime>("DateLastModifiedUtc");
 
@@ -213,7 +253,13 @@ namespace HackTillDawnProject.Data.Migrations
 
                     b.Property<DateTime>("DateCreatedUtc");
 
+                    b.Property<DateTime?>("DateFlaggedForDeletionUtc");
+
+                    b.Property<DateTime?>("DateInactivatedUtc");
+
                     b.Property<DateTime>("DateLastModifiedUtc");
+
+                    b.Property<DateTime?>("DateReadUtc");
 
                     b.Property<DateTime>("DateTimeCaptureEndUtc");
 
@@ -227,11 +273,15 @@ namespace HackTillDawnProject.Data.Migrations
 
                     b.Property<bool>("IsDeleted");
 
+                    b.Property<bool>("IsReviewed");
+
                     b.Property<Guid>("RegisteredDeviceId");
+
+                    b.Property<string>("ReviewedById");
 
                     b.Property<string>("Tags");
 
-                    b.Property<decimal>("TriggerConfidencePercent");
+                    b.Property<decimal?>("TriggerConfidencePercent");
 
                     b.Property<string>("TriggerDescription");
 
@@ -240,6 +290,8 @@ namespace HackTillDawnProject.Data.Migrations
                     b.HasIndex("APIResultTypeId");
 
                     b.HasIndex("RegisteredDeviceId");
+
+                    b.HasIndex("ReviewedById");
 
                     b.ToTable("FootageStorage");
                 });
@@ -251,11 +303,15 @@ namespace HackTillDawnProject.Data.Migrations
 
                     b.Property<DateTime>("DateCreatedUtc");
 
+                    b.Property<DateTime?>("DateFlaggedForDeletionUtc");
+
+                    b.Property<DateTime?>("DateInactivatedUtc");
+
                     b.Property<DateTime>("DateLastModifiedUtc");
 
                     b.Property<DateTime>("DateRegistered");
 
-                    b.Property<string>("DeviceName");
+                    b.Property<string>("DeviceIdName");
 
                     b.Property<bool>("IsActive");
 
@@ -277,6 +333,10 @@ namespace HackTillDawnProject.Data.Migrations
                     b.Property<Guid>("EventId");
 
                     b.Property<DateTime>("DateCreatedUtc");
+
+                    b.Property<DateTime?>("DateFlaggedForDeletionUtc");
+
+                    b.Property<DateTime?>("DateInactivatedUtc");
 
                     b.Property<DateTime>("DateLastModifiedUtc");
 
@@ -455,6 +515,10 @@ namespace HackTillDawnProject.Data.Migrations
                         .WithMany("FootageStored")
                         .HasForeignKey("RegisteredDeviceId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HackTillDawnProject.Models.ApplicationUser", "ReviewedBy")
+                        .WithMany("Reviewed")
+                        .HasForeignKey("ReviewedById");
                 });
 
             modelBuilder.Entity("HackTillDawnProject.Models.RegisteredDevice", b =>

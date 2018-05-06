@@ -104,6 +104,10 @@ namespace HackTillDawnProject.Data
                     .WithMany(e => e.FootageStorages)
                     .HasForeignKey(e => e.APIResultTypeId);
 
+                entity.HasOne(e => e.ReviewedBy)
+                    .WithMany(e => e.Reviewed)
+                    .HasForeignKey(e => e.ReviewedById);
+
                 entity.HasOne(e => e.RegisteredDevice)
                     .WithMany(e => e.FootageStored)
                     .HasForeignKey(e => e.RegisteredDeviceId);

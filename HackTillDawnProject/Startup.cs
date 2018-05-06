@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using HackTillDawnProject.Data;
 using HackTillDawnProject.Models;
 using HackTillDawnProject.Services;
+using HackTillDawnProject.ModelManager;
 
 namespace HackTillDawnProject
 {
@@ -27,7 +28,7 @@ namespace HackTillDawnProject
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("local")));
+                options.UseSqlServer(Configuration.GetConnectionString("awsdb")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -45,6 +46,9 @@ namespace HackTillDawnProject
             services.AddScoped<IFootageStorageService, FootageStorageService>();
             services.AddScoped<IRegisteredDeviceService, RegisteredDeviceService>();
             services.AddScoped<IStaffEventIntermediateService, StaffEventIntermediateService>();
+
+            //Managers
+            services.AddScoped<FootageManager>();
 
             services.AddTransient<IEmailSender, EmailSender>();
             

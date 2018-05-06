@@ -13,7 +13,7 @@ namespace HackTillDawnProject.Models
             FootageStored = new HashSet<FootageStorage>();
         }
         public Guid IdRegisteredDevice { get; set; }
-        public string DeviceName { get; set; }
+        public string DeviceIdName { get; set; }
         public DateTime DateRegistered { get; set; }
 
         public ApplicationUser RegisteredBy { get; set; }

@@ -13,6 +13,7 @@ namespace HackTillDawnProject.Models
         {
             RegisteredDevices = new HashSet<RegisteredDevice>();
             StaffEventIntermediates = new HashSet<StaffEventIntermediate>();
+            Reviewed = new HashSet<FootageStorage>();
         }
         /// <summary>
         /// Allow for custom badge numbers to identity users
@@ -21,5 +22,6 @@ namespace HackTillDawnProject.Models
 
         public ICollection<RegisteredDevice> RegisteredDevices { get; set; }
         public ICollection<StaffEventIntermediate> StaffEventIntermediates { get; set; }
+        public ICollection<FootageStorage> Reviewed { get; set; }
     }
 }

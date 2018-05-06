@@ -38,7 +38,7 @@ namespace HackTillDawnProject.Services
 
     public class BasicModelServiceImplementation<T> : IBasicModelService<T> where T : DataRowProperty
     {
-        ApplicationDbContext _context;
+        protected ApplicationDbContext _context;
         
         public BasicModelServiceImplementation(ApplicationDbContext ctx)
         {
