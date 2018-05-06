@@ -12,6 +12,10 @@ using HackTillDawnProject.Data;
 using HackTillDawnProject.Models;
 using HackTillDawnProject.Services;
 using HackTillDawnProject.ModelManager;
+using Amazon.Extensions.NETCore.Setup;
+using Amazon.Runtime.CredentialManagement;
+using Amazon;
+using Amazon.S3;
 
 namespace HackTillDawnProject
 {
@@ -33,8 +37,12 @@ namespace HackTillDawnProject
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+            
 
-
+            //AWS
+            services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
+            services.AddAWSService<IAmazonS3>();
+            services.AddScoped<IAWSService, AWSService>();
 
             //Database Services
             services.AddScoped<IAPIResultTypeService, APIResultTypeService>();
@@ -71,6 +79,8 @@ namespace HackTillDawnProject
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            
 
             app.UseStaticFiles();
 
