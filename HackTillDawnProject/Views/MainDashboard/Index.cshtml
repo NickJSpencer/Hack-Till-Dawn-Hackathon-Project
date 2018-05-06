@@ -352,7 +352,6 @@
                     channel_id: "502F0624-2439-4638-D4E9-08D5B3164FD1"
                 },
                 success: function (data) {
-                    debugger;
                     for (i = 0; i < data.length; i++) {
                         var dat = data[i];
                         var exists = false;
@@ -422,24 +421,39 @@
 
         $scope.requestHelp = function () {
             $("#comments").val('');
-
             $("#submitModal").modal();
         }
 
         $scope.confirmRequest = function () {
-            $("#myModal").modal();
-            $scope.currentNotification.is_read = true;
-            $scope.currentNotification = null;
-            $scope.show_contacts = false;
-            $scope.show_notification = false;
-            $scope.show_content = false;
-            $scope.updateUnreadNotifications();
-            $scope.clearRecipients();
 
+
+            $.ajax({
+                url: '@Url.Action("SendSMSMessageAsync", "Upload")',
+                type: 'POST',
+                cache: false,
+                dataType: 'json',
+                data: {
+                    comment: $("#comments").val(),
+                },
+                success: function (data) {
+                    if (data == true) {
+                        $("#myModal").modal();
+                        $scope.currentNotification.is_read = true;
+                        $scope.currentNotification = null;
+                        $scope.show_contacts = false;
+                        $scope.show_notification = false;
+                        $scope.show_content = false;
+                        $scope.updateUnreadNotifications();
+                        $scope.clearRecipients();
+                    }
+                },
+                failure: function (data) {
+                    debugger;
+                },
+            });
         }
 
         $scope.activateToggle = function (index) {
-            debugger;
             $("#checkbox" + index).bootstrapToggle();
         }
 

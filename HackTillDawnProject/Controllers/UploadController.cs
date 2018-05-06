@@ -80,11 +80,12 @@ namespace HackTillDawnProject.Controllers
             var footage = _FootageStorageService.Add(new FootageStorage()
             {
                 APIResultTypeId = Guid.Parse("19FCC874-77CB-4B41-2BD1-08D5B31651E5"),
-                FileName = "test",
+                FileName = "Front Left Stage 2",
                 RegisteredDeviceId = Guid.Parse("DFB3A04B-AF60-4E59-9AA3-08D5B3164CB7"),
                 TriggerConfidencePercent = 60,
                 DateTimeCaptureStartUtc = DateTime.Now.ToUniversalTime(),
                 DateTimeCaptureEndUtc = DateTime.Now.ToUniversalTime(),
+                FileLocation = "Stage 2"
             });
             return Json(true);
         }
@@ -93,11 +94,13 @@ namespace HackTillDawnProject.Controllers
             var footage = _FootageStorageService.Add(new FootageStorage()
             {
                 APIResultTypeId = Guid.Parse("19FCC874-77CB-4B41-2BD1-08D5B31651E5"),
-                FileName = "test2",
+                FileName = "Back Center Stage 4",
                 RegisteredDeviceId = Guid.Parse("A0331C35-8454-402F-F613-08D5B318489E"),
                 TriggerConfidencePercent = 60,
                 DateTimeCaptureStartUtc = DateTime.Now.ToUniversalTime(),
                 DateTimeCaptureEndUtc = DateTime.Now.ToUniversalTime(),
+                FileLocation = "Stage 4"
+
             });
             return Json(true);
         }
@@ -131,7 +134,7 @@ namespace HackTillDawnProject.Controllers
             return Json(true);
         }
 
-        public async Task<JsonResult> SendMMSMessageAsync()
+        public async Task<JsonResult> SendSMSMessageAsync(string comment)
         {
             // Your Account SID from twilio.com/console
             var accountSid = "ACe41c624d47a1d067094dc7d5ec6849ec";
@@ -139,15 +142,16 @@ namespace HackTillDawnProject.Controllers
             var authToken = "0a922556ca8b1a7d0a85bec7aa971447";
 
             TwilioClient.Init(accountSid, authToken);
-            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "symbol.png");
 
-            var uri = new Uri(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "symbol.png"));
+            //var message = await MessageResource.CreateAsync(
+            //    to: new PhoneNumber("+18057056133"),
+            //    from: new PhoneNumber("+18053086371"),
+            //    body: comment);
+
             var message = await MessageResource.CreateAsync(
                 to: new PhoneNumber("+18057056133"),
                 from: new PhoneNumber("+18053086371"),
-                body: "Sending an image",
-                mediaUrl: Promoter.ListOfOne((uri))); 
-
+                body: comment);
 
             return Json(true);
         }
