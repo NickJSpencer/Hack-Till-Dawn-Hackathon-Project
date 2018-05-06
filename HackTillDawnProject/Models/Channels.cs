@@ -8,7 +8,7 @@ namespace HackTillDawnProject.Models
     /// <summary>
     /// Generally one channel per monitoring user
     /// </summary>
-    public class Channel
+    public class Channel : DataRowProperty
     {
         public Channel()
         {

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace HackTillDawnProject.Models
 {
-    public class ChannelContactIntermediate
+    public class ChannelContactIntermediate : DataRowProperty
     {
         //PK
         public Channel Channel { get; set; }
