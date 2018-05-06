@@ -77,6 +77,14 @@ namespace HackTillDawnProject.Controllers
             return Json(true);
         }
 
+        //public JsonResult AddContact()
+        //{
+        //    var contact = _ContactService.Add(new Contact()
+        //    {
+
+        //    })
+        //}
+
         public IActionResult Index()
         {
             try
