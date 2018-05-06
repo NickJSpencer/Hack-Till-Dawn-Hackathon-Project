@@ -22,7 +22,7 @@ namespace HackTillDawnProject.Controllers
         { return View(); }
         public async Task<FileStreamResult> StreamMe(string footage_id)
         {
-            FootageStorage Footage = _FootageStorageService.
+            //FootageStorage Footage = _FootageStorageService.
             byte[] stream =  await System.IO.File.ReadAllBytesAsync(Path.Combine(Directory.GetCurrentDirectory(),"wwwroot", "Videos", "test.mp4"));
             MemoryStream result = new MemoryStream(stream);
 

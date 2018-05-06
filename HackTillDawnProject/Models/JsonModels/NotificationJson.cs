@@ -24,5 +24,7 @@ namespace HackTillDawnProject.Models.JsonModels
         /* From RegisteredDevice */
         public string IdRegisteredDevice { get; set; }
         public string DeviceName { get; set; }
+
+        public bool? is_read { get; set; }
     }
 }

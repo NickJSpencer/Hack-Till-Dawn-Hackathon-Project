@@ -230,7 +230,17 @@
         height: 5px;
         
     }
+    .title {
+        background-color: coral;
+        width: 100%;
+        text-align: center;
+        font-size: 30px;
+    }
 
+    .video-content {
+        width: 100%;
+        height: 100%;
+    }
     
 </style>
 <script type="text/javascript">
@@ -238,16 +248,8 @@
     angular.module('SafetyLens', ['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
     angular.module('SafetyLens').controller('MainDashboardController', function ($scope, $filter) {
         $scope.show_read = false;
-        $scope.notifications = [
-            {
-                "name": "Notification Test 1",
-                "is_read": true,
-            },
-            {
-                "name": "Notification Test 2",
-                "is_read": false,
-            },
-        ];
+        $scope.currentNotification = null;
+
         $scope.channels = [
             {
                 "name": "Channel Test"
@@ -257,9 +259,31 @@
             },
         ];
 
+        $scope.GetAllNotifications = function () {
+            $.ajax({
+                url: '@Url.Action("GetAllCurrentNotifications", "MainDashboard")',
+                type: 'POST',
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    $scope.notifications = data;
+                    $scope.$apply();
+                    debugger;
+                },
+                failure: function (data) {
+                    debugger;
+                },
+            });
+        }
+
+        $scope.viewNotification = function (notification) {
+            $scope.currentNotification = notification;
+            $scope.currentNotification.is_read = true;
+            //$scope.$apply();
+        }
 
         var init = function () {
-            //modals.buildModal($("#modal_container"));
+            $scope.GetAllNotifications();
         }
         init();
     });
@@ -306,11 +330,22 @@
                 <div class="bar">
                 </div>
                 <div class="w3-bar w3-border w3-light-grey" ng-repeat="notification in notifications" ng-show="notification.is_read == show_read">
-                    <a class="w3-bar-item w3-button w3-left" style="width: 100%;">{{notification.name}}</a>
+                    <a class="w3-bar-item w3-button w3-left" style="width: 100%;" ng-click="viewNotification(notification)">{{notification.deviceName}}</a>
                 </div>
             </div>
 
             <div class="content" id="content">
+                <div class="notification-content" ng-show="currentNotification != null">
+                    <div class="title" ng-model="currentNotification">
+                        {{currentNotification.deviceName}}
+                    </div>
+                    <div class="video-content">
+                        <video width="1700" height="800" controls>
+                            <source src="Stream/StreamMe" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
 
             </div>
         </div>
