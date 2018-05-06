@@ -53,6 +53,30 @@ namespace HackTillDawnProject.Controllers
             throw new NotImplementedException();
         }
 
+
+        public JsonResult SimulateTest1()
+        {
+            var footage = _FootageStorageService.Add(new FootageStorage()
+            {
+                APIResultTypeId = Guid.Parse("19FCC874-77CB-4B41-2BD1-08D5B31651E5"),
+                FileName = "test",
+                RegisteredDeviceId = Guid.Parse("DFB3A04B-AF60-4E59-9AA3-08D5B3164CB7"),
+                TriggerConfidencePercent = 60
+            });
+            return Json(true);
+        }
+        public JsonResult SimulateTest2()
+        {
+            var footage = _FootageStorageService.Add(new FootageStorage()
+            {
+                APIResultTypeId = Guid.Parse("19FCC874-77CB-4B41-2BD1-08D5B31651E5"),
+                FileName = "test2",
+                RegisteredDeviceId = Guid.Parse("A0331C35-8454-402F-F613-08D5B318489E"),
+                TriggerConfidencePercent = 60
+            });
+            return Json(true);
+        }
+
         public IActionResult Index()
         {
             try
@@ -60,36 +84,36 @@ namespace HackTillDawnProject.Controllers
                 //var device = _RegisteredDeviceService.Add(new RegisteredDevice()
                 //{
                 //    DateRegistered = DateTime.UtcNow,
-                //    DeviceIdName = "Test1",
+                //    DeviceIdName = "Test2",
                 //    RegisteredById = "c748fbb9-3960-408c-9c8d-8d117e98994e"
                 //});
-                //var Event = _EventService.Add(new Models.Event()
-                //{
-                //    Name = "HackTillDawn",
-                //    Description = "AngelHack Event"
-                //});
-                //var channel = _ChannelService.Add(new Channel()
-                //{
-                //    Description = "Identify People In Need",
-                //    Name = "Health Channel",
-                //    EventId = Event.IdEvent
-                //});
+                ////var Event = _EventService.Add(new Models.Event()
+                ////{
+                ////    Name = "HackTillDawn",
+                ////    Description = "AngelHack Event"
+                ////});
+                ////var channel = _ChannelService.Add(new Channel()
+                ////{
+                ////    Description = "Identify People In Need",
+                ////    Name = "Health Channel",
+                ////    EventId = Event.IdEvent
+                ////});
                 //var device_event = _DeviceEventIntermediateService.Add(new DeviceEventIntermediate()
                 //{
-                //    IdEventId = Event.IdEvent,
+                //    IdEventId = Guid.Parse("F0ADC736-E4A9-40B0-651D-08D5B3164EAF"),
                 //    IdRegisteredDeviceId = device.IdRegisteredDevice,
                 //    DeviceLocation = "Dev Area"
                 //});
-                //var APItype = _APIResultTypeService.Add(new APIResultType()
-                //{
-                //    APIName = "Anomaly",
-                //    Description = "Detects out of the ordinary things",
-                //    Name = "Anomaly"
-                //});
+                ////var APItype = _APIResultTypeService.Add(new APIResultType()
+                ////{
+                ////    APIName = "Anomaly",
+                ////    Description = "Detects out of the ordinary things",
+                ////    Name = "Anomaly"
+                ////});
                 //var footage = _FootageStorageService.Add(new FootageStorage()
                 //{
-                //    APIResultTypeId = APItype.IdResultType,
-                //    FileName = "test",
+                //    APIResultTypeId = Guid.Parse("19FCC874-77CB-4B41-2BD1-08D5B31651E5"),
+                //    FileName = "test2",
                 //    RegisteredDeviceId = device.IdRegisteredDevice,
                 //    TriggerConfidencePercent = 60
                 //});
