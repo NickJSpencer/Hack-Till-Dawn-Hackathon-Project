@@ -184,9 +184,9 @@
 
     .active {
         background-color: darkgray !important;
-        border: solid !important;
+        /*border: solid !important;
         border-color: #999999 !important;
-        border-width: 1px !important;
+        border-width: 1px !important;*/
         /*box-shadow: 10px 10px 5px black;
         -webkit-box-shadow: 10px 10px 5px black;
         position: relative;
@@ -352,16 +352,20 @@
                     channel_id: "502F0624-2439-4638-D4E9-08D5B3164FD1"
                 },
                 success: function (data) {
+                    debugger;
                     for (i = 0; i < data.length; i++) {
                         var dat = data[i];
+                        var exists = false;
                         for (j = 0; j < $scope.notifications.length; j++) {
-                            var not = $scope.notifications[i];
-
-                            if (dat.idFootageStorage == not.idFootageStorage) {}
+                            var not = $scope.notifications[j];
+                            if (dat.idFootageStorage == not.idFootageStorage) { exists = true; break;}
+                        }
+                        if (!exists) {
+                            $scope.notifications.unshift(dat);
                         }
                     }
 
-                    $scope.notifications = data;
+                    //$scope.notifications = data;
                     $scope.updateUnreadNotifications();
 
                     for (i = 0; i < $scope.notifications.length; i++) {
@@ -369,7 +373,7 @@
                         var date = new Date(not.dateTimeCaptureStartUtc);
                         not.timeElapsed = Math.round((Date.now() - date.getTime() + date.getTimezoneOffset() * 60 * 1000) / 1000 / 60);
                     }
-                    //$scope.$apply();
+                    $scope.$apply();
                 },
                 failure: function (data) {
                     debugger;
@@ -417,6 +421,12 @@
         }
 
         $scope.requestHelp = function () {
+            $("#comments").val('');
+
+            $("#submitModal").modal();
+        }
+
+        $scope.confirmRequest = function () {
             $("#myModal").modal();
             $scope.currentNotification.is_read = true;
             $scope.currentNotification = null;
@@ -425,11 +435,11 @@
             $scope.show_content = false;
             $scope.updateUnreadNotifications();
             $scope.clearRecipients();
+
         }
 
         $scope.activateToggle = function (index) {
             debugger;
-
             $("#checkbox" + index).bootstrapToggle();
         }
 
@@ -452,10 +462,10 @@
         <div class="modal" id="myModal" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" id="modal_title" style="color: green;">Success</h4>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="modal_title" style="color: green;">Success</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
                     <div class="modal-body">
                         <p id="modal_content">
                             The help request has been sent successfully!
@@ -464,6 +474,31 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="submitModal" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="modal_title" style="color: green;">Confirm Request</h4>
+                        @*<button type="button" class="close" data-dismiss="modal">&times;</button>*@
+                    </div>
+                    <div class="modal-body">
+                        <p id="modal_content">
+                            <div class="form-group">
+                                <label for="comments">Type any relavent information below:</label>
+                                <textarea class="form-control" id="comments" rows="3"></textarea>
+                            </div>
+                            <div style="display: flex;">
+                                <button class="btn btn-primary" style="width: 50%; flex: 1;" data-dismiss="modal" ng-click="confirmRequest()">SEND REQUEST</button>
+                                <button class="btn btn-secondary" style="width: 50%; flex: 1;" data-dismiss="modal">CANCEL</button>
+                            </div>
+                        </p>
+                    </div>
+                    @*<div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                    </div>*@
                 </div>
             </div>
         </div>
@@ -554,7 +589,7 @@
                     </div>
                     <div class="contacts-header">
                         <div class="row">
-                            <div class="col-md-2">Include In Request</div>
+                            <div class="col-md-1">Request</div>
                             <div class="col-md-2">Name</div>
                             <div class="col-md-2">Role</div>
                             <div class="col-md-2">Phone Number</div>
@@ -563,7 +598,7 @@
                     </div>
                     <div class="contact-card" ng-repeat="contact in contacts" ng-class="{'active':contact.selected}" ng-click="contact.selected = !contact.selected">
                         <div class="row">
-                            <div class="col-md-2"><input id="checkbox{{$index}}" type="checkbox" ng-model="contact.selected"></div>
+                            <div class="col-md-1"><input id="checkbox{{$index}}" type="checkbox" ng-model="contact.selected"></div>
                             <div class="col-md-2">{{contact.name}}</div>
                             <div class="col-md-2">{{contact.role}}</div>
                             <div class="col-md-2">{{contact.phoneNumber}}</div>

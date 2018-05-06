@@ -66,7 +66,9 @@ namespace HackTillDawnProject.Controllers
                 APIResultTypeId = Guid.Parse("19FCC874-77CB-4B41-2BD1-08D5B31651E5"),
                 FileName = "test",
                 RegisteredDeviceId = Guid.Parse("DFB3A04B-AF60-4E59-9AA3-08D5B3164CB7"),
-                TriggerConfidencePercent = 60
+                TriggerConfidencePercent = 60,
+                DateTimeCaptureStartUtc = DateTime.Now.ToUniversalTime(),
+                DateTimeCaptureEndUtc = DateTime.Now.ToUniversalTime(),
             });
             return Json(true);
         }
@@ -77,7 +79,9 @@ namespace HackTillDawnProject.Controllers
                 APIResultTypeId = Guid.Parse("19FCC874-77CB-4B41-2BD1-08D5B31651E5"),
                 FileName = "test2",
                 RegisteredDeviceId = Guid.Parse("A0331C35-8454-402F-F613-08D5B318489E"),
-                TriggerConfidencePercent = 60
+                TriggerConfidencePercent = 60,
+                DateTimeCaptureStartUtc = DateTime.Now.ToUniversalTime(),
+                DateTimeCaptureEndUtc = DateTime.Now.ToUniversalTime(),
             });
             return Json(true);
         }
@@ -111,7 +115,7 @@ namespace HackTillDawnProject.Controllers
             return Json(true);
         }
 
-        public async Task<JsonResult> SendSMSMessageAsync()
+        public async Task<JsonResult> SendMMSMessageAsync()
         {
             // Your Account SID from twilio.com/console
             var accountSid = "ACe41c624d47a1d067094dc7d5ec6849ec";
