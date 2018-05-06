@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using HackTillDawnProject.Models;
+using HackTillDawnProject.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,19 +13,20 @@ namespace HackTillDawnProject.Controllers
 {
     public class StreamController : Controller
     {
-        public async Task Index()
+        private IFootageStorageService _FootageStorageService { get; }
+        public StreamController(IFootageStorageService ifss)
         {
-            var response = HttpContext.Response;
-            response.Headers.Add("Content-Type", "video/abst");
+            _FootageStorageService = ifss;
+        }
+        public IActionResult Index()
+        { return View(); }
+        public async Task<FileStreamResult> StreamMe(string footage_id)
+        {
+            FootageStorage Footage = _FootageStorageService.
+            byte[] stream =  await System.IO.File.ReadAllBytesAsync(Path.Combine(Directory.GetCurrentDirectory(),"wwwroot", "Videos", "test.mp4"));
+            MemoryStream result = new MemoryStream(stream);
 
-            for (var i = 0; true; ++i)
-            {
-                await response
-                    .WriteAsync($"data: Controller {i} at {DateTime.Now}\r\r");
-
-                response.Body.Flush();
-                await Task.Delay(5 * 1000);
-            }
+            return new FileStreamResult(result, "video/mp4");
         }
     }
 }

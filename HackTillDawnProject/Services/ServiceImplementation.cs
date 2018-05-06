@@ -24,6 +24,9 @@ namespace HackTillDawnProject.Services
         T Deactivate(T deactivate, bool save_after_execute = true);
         void Deactivate(List<T> deactivates, bool save_after_execute = true);
 
+        T Get(params object[] primary_key);
+        List<T> GetAll();
+
     }
 
     public interface IDatabaseService
@@ -104,6 +107,16 @@ namespace HackTillDawnProject.Services
         {
             deletes.ForEach(e => e.IsDeleted = true);
             Update(deletes, save_after_execute);
+        }
+
+        public T Get(params object[] primary_key)
+        {
+            return _context.Find<T>(primary_key);
+        }
+
+        public List<T> GetAll()
+        {
+            return _context.Set<T>().ToList();
         }
 
         public T Update(T update, bool save_after_execute = true)
