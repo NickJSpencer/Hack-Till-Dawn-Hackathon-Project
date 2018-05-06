@@ -1,14 +1,15 @@
-﻿<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+﻿
+<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 <style>
 
 
-    /*.wrapper {
+    .wrapper {
         display: flex;
         align-items: stretch;
-    }*/
+    }
 
-    /*a[data-toggle="collapse"] {
+    a[data-toggle="collapse"] {
         position: relative;
     }
 
@@ -45,9 +46,9 @@
         transition: all 0.3s;
     }
 
-    #sidebar {*/
-        /* don't forget to add all the previously mentioned styles here too */
-        /*background: #7386D5;
+    /*#sidebar {*/
+    /* don't forget to add all the previously mentioned styles here too */
+    /*background: #7386D5;
         color: #fff;
         transition: all 0.3s;
         min-width: 250px;
@@ -89,7 +90,7 @@
         #sidebar ul li.active > a, a[aria-expanded="true"] {
             color: #fff;
             background: #6d7fcc;
-        }
+        }*/
 
     ul ul a {
         font-size: 0.9em !important;
@@ -101,29 +102,18 @@
         display: block;
     }
 
-    #sidebar {
-        min-width: 250px;
-        max-width: 250px;
+    .overlay {
+    /* full screen */
+    width: 100vw;
         height: 100vh;
-        position: fixed;
-        top: 0;
-        left: 0;*/
-        /* top layer */
-        /*z-index: 9999;
-    }
-
-    .overlay {*/
-        /* full screen */
-        /*width: 100vw;
-        height: 100vh;*/
-        /* transparent black */
-        /*background: rgba(0, 0, 0, 0.8);
+    /* transparent black */
+    background: rgba(0, 0, 0, 0.8);
         position: fixed;
         top: 0;
         left: 0;
-        display: none;*/
-        /* middle layer, i.e. appears below the sidebar */
-        /*z-index: 9998;*/
+        display: none;
+    /* middle layer, i.e. appears below the sidebar */
+    z-index: 9998;
     }
 
     /*@@media (max-width: 768px) {
@@ -136,7 +126,8 @@
     }*/
 
     .container {
-        max-width: none;
+        max-width: none !important;
+        width: 100%;
     }
 
     .content {
@@ -172,22 +163,127 @@
         padding-bottom: 20px;
         font-size: 20px;
     }
+
+    .wrapper {
+
+    }
+
+    @@media (min-width: 1200px) {
+        .container {
+            max-width: none;
+        }
+    }
+
+    .body-content {
+        padding: 0px;
+    }
+    .logo {
+
+    }
+    .channel-bar {
+        background-color: coral;
+        width: 100%;
+        padding: 15px;
+    }
+    .channel-bar-bin {
+        display: flex;
+    }
+    .channel {
+        border: solid;
+        border-color: black;
+        padding: 10px;
+        width: 100px;
+        cursor: pointer;
+    }
+
+    .sidebar-content-bin {
+        display: flex;
+    }
+
+    .sidebar {
+        /*flex: 1;*/
+        background-color: lightgray;
+        min-width: 200px;
+        min-height: 100vh;
+        max-width: 200px;
+    }
+
+    .notification-bar {
+        padding: 15px;
+    }
+    .notification-bar-bin {
+        width: 150px;
+    }
+
+    .notification {
+        border: solid;
+        border-color: black;
+        padding: 10px;
+        cursor: pointer;
+        max-width: 120px;
+    }
+    .content {
+        flex: 10;
+    }
+
+    .bar {
+        height: 5px;
+        
+    }
+    .title {
+        background-color: coral;
+        width: 100%;
+        text-align: center;
+        font-size: 30px;
+    }
+
+    .video-content {
+        width: 100%;
+        height: 100%;
+    }
+    
 </style>
 <script type="text/javascript">
 
     angular.module('SafetyLens', ['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
     angular.module('SafetyLens').controller('MainDashboardController', function ($scope, $filter) {
+        $scope.show_read = false;
+        $scope.currentNotification = null;
 
-        $scope.notifications = [{
-            "name": "test"
+        $scope.channels = [
+            {
+                "name": "Channel Test"
+            },
+            {
+                "name": "Channel Test 2"
+            },
+        ];
 
-        }]
+        $scope.GetAllNotifications = function () {
+            $.ajax({
+                url: '@Url.Action("GetAllCurrentNotifications", "MainDashboard")',
+                type: 'POST',
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    $scope.notifications = data;
+                    $scope.$apply();
+                    debugger;
+                },
+                failure: function (data) {
+                    debugger;
+                },
+            });
+        }
 
-
+        $scope.viewNotification = function (notification) {
+            $scope.currentNotification = notification;
+            $scope.currentNotification.is_read = true;
+            //$scope.$apply();
+        }
 
         var init = function () {
-            modals.buildModal($("#modal_container"));
-            $scope.getWorkflows();
+            $scope.GetAllNotifications();
         }
         init();
     });
@@ -195,23 +291,65 @@
 
 
 </script>
-<div ng-app="SafetyLens" ng-controller="PrefabDashboardController" ng-cloak>
+<div ng-app="SafetyLens" ng-controller="MainDashboardController" ng-cloak>
     <div id="modal_container">
     </div>
-    <div class="wrapper" style="margin-left: -15px; margin-right: -15px;">
-        <div class="card" style="width: 18rem;">
-            <div class="card-header">
+    <div class="wrapper">
+        <div class="w3-bar w3-border w3-light-grey">
+            <a class="w3-bar-item w3-button w3-right" ng-repeat="channel in channels">{{channel.name}}</a>
+        </div>
+        @*<div class="channel-bar">
+            <div class="logo">
+
+            </div>
+            <div class="channel-bar-bin">
+                <div class="channel">Channel 1</div>
+            </div>
+        </div>*@
+        @*<div class="card" style="width: 18rem;">
+            <div class="card-header" >
                 Featured
             </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Cras justo odio</li>
-                <li class="list-group-item">Dapibus ac facilisis in</li>
-                <li class="list-group-item">Vestibulum at eros</li>
-            </ul>
-        </div>
-        <div class="content" id="content">
+        </div>*@
+        <div class="sidebar-content-bin">
+            @*<div class="sidebar">
+                <div class="notification-bar">
+                    <div class="notification-bar-bin">
+                        <div class="notification" ng-repeat="notification in notifications">{{notification.name}}</div>
+                    </div>
+                </div>
+            </div>*@
+            <div class="sidebar">
+                <div class="w3-bar w3-border w3-light-grey">
+                    <a class="w3-bar-item" style="text-align: center; font-size: 16px; font-weight: bold; width:100%; background-color: darkgray;">NOTIFICATIONS</a>
+                </div>
+                <div class="w3-bar w3-border w3-light-grey" style="display: flex;">
+                    <a class="w3-bar-item w3-button w3-left" style="flex: 1;" ng-click="show_read = true;">Read</a>
+                    <a class="w3-bar-item w3-button w3-left" style="flex: 1;" ng-click="show_read = false;">Unread</a>
+                </div>
+                <div class="bar">
+                </div>
+                <div class="w3-bar w3-border w3-light-grey" ng-repeat="notification in notifications" ng-show="notification.is_read == show_read">
+                    <a class="w3-bar-item w3-button w3-left" style="width: 100%;" ng-click="viewNotification(notification)">{{notification.deviceName}}</a>
+                </div>
+            </div>
 
+            <div class="content" id="content">
+                <div class="notification-content" ng-show="currentNotification != null">
+                    <div class="title" ng-model="currentNotification">
+                        {{currentNotification.deviceName}}
+                    </div>
+                    <div class="video-content">
+                        <video width="1700" height="800" controls>
+                            <source src="Stream/StreamMe" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+
+            </div>
         </div>
+
         <div class="overlay"></div>
     </div>
 </div>
