@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using HackTillDawnProject.Models;
 using HackTillDawnProject.Models.JsonModels;
-
+using Microsoft.AspNetCore.Mvc;
 
 namespace HackTillDawnProject.Controllers
 {
-    public class DashboardController : Controller
+    public class MainDashboardController : Controller
     {
+
         /* Services */
-        IFootageStorageService _FootageStorageService;
-        public DashboardController(IFootageStorageService ifss)
+        //IFootageStorageService _FootageStorageService;
+        public MainDashboardController(/*IFootageStorageService ifss*/)
         {
-            _FootageStorageService = ifss;
+            //_FootageStorageService = ifss;
         }
 
         public IActionResult Index()
@@ -24,13 +23,13 @@ namespace HackTillDawnProject.Controllers
             return View();
         }
 
-        public GetAllCurrentNotifications()
+        public JsonResult GetAllCurrentNotifications()
         {
             List<NotificationJson> notifications = new List<NotificationJson>();
 
-            List<FootageStorage> videos = _FootageStorageService.GetAllCurrent();
-            
+            //List<FootageStorage> videos = _FootageStorageService.GetAllCurrent();
 
+            return null;
         }
     }
 }
