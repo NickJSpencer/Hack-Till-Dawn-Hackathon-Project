@@ -17,9 +17,16 @@ namespace HackTillDawnProject.Models
         public DateTime DateTimeCaptureEndUtc { get; set; }
         public string Tags { get; set; }
         public string TriggerDescription { get; set; }
-        public decimal TriggerConfidencePercent { get; set; }
+        public decimal? TriggerConfidencePercent { get; set; }
         public string FileLocation { get; set; }
         public string FileName { get; set; }
+
+        public DateTime? DateReadUtc { get; set; }
+        public bool IsReviewed { get; set; }
+
+        public ApplicationUser ReviewedBy { get; set; }
+        public string ReviewedById { get; set; }
+
 
         public RegisteredDevice RegisteredDevice { get; set; }
         public Guid RegisteredDeviceId { get; set; }

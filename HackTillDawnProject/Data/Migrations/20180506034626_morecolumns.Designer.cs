@@ -12,9 +12,10 @@ using System;
 namespace HackTillDawnProject.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180506034626_morecolumns")]
+    partial class morecolumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -259,8 +260,6 @@ namespace HackTillDawnProject.Data.Migrations
 
                     b.Property<DateTime>("DateLastModifiedUtc");
 
-                    b.Property<DateTime?>("DateReadUtc");
-
                     b.Property<DateTime>("DateTimeCaptureEndUtc");
 
                     b.Property<DateTime>("DateTimeCaptureStartUtc");
@@ -273,15 +272,11 @@ namespace HackTillDawnProject.Data.Migrations
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<bool>("IsReviewed");
-
                     b.Property<Guid>("RegisteredDeviceId");
-
-                    b.Property<string>("ReviewedById");
 
                     b.Property<string>("Tags");
 
-                    b.Property<decimal?>("TriggerConfidencePercent");
+                    b.Property<decimal>("TriggerConfidencePercent");
 
                     b.Property<string>("TriggerDescription");
 
@@ -290,8 +285,6 @@ namespace HackTillDawnProject.Data.Migrations
                     b.HasIndex("APIResultTypeId");
 
                     b.HasIndex("RegisteredDeviceId");
-
-                    b.HasIndex("ReviewedById");
 
                     b.ToTable("FootageStorage");
                 });
@@ -311,7 +304,7 @@ namespace HackTillDawnProject.Data.Migrations
 
                     b.Property<DateTime>("DateRegistered");
 
-                    b.Property<string>("DeviceIdName");
+                    b.Property<string>("DeviceName");
 
                     b.Property<bool>("IsActive");
 
@@ -515,10 +508,6 @@ namespace HackTillDawnProject.Data.Migrations
                         .WithMany("FootageStored")
                         .HasForeignKey("RegisteredDeviceId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HackTillDawnProject.Models.ApplicationUser", "ReviewedBy")
-                        .WithMany("Reviewed")
-                        .HasForeignKey("ReviewedById");
                 });
 
             modelBuilder.Entity("HackTillDawnProject.Models.RegisteredDevice", b =>

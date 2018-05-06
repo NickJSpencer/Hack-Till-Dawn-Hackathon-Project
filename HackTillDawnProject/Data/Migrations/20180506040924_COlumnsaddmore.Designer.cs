@@ -12,9 +12,10 @@ using System;
 namespace HackTillDawnProject.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180506040924_COlumnsaddmore")]
+    partial class COlumnsaddmore
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -281,7 +282,7 @@ namespace HackTillDawnProject.Data.Migrations
 
                     b.Property<string>("Tags");
 
-                    b.Property<decimal?>("TriggerConfidencePercent");
+                    b.Property<decimal>("TriggerConfidencePercent");
 
                     b.Property<string>("TriggerDescription");
 
@@ -311,7 +312,7 @@ namespace HackTillDawnProject.Data.Migrations
 
                     b.Property<DateTime>("DateRegistered");
 
-                    b.Property<string>("DeviceIdName");
+                    b.Property<string>("DeviceName");
 
                     b.Property<bool>("IsActive");
 
