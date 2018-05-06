@@ -8,6 +8,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Twilio;
+using Twilio.Converters;
+using Twilio.Rest.Api.V2010.Account;
+using Twilio.Types;
 
 namespace HackTillDawnProject.Controllers
 {
@@ -91,6 +95,56 @@ namespace HackTillDawnProject.Controllers
                 RegisteredDeviceId = Guid.Parse("A0331C35-8454-402F-F613-08D5B318489E"),
                 TriggerConfidencePercent = 60
             });
+            return Json(true);
+        }
+
+        public JsonResult AddContact()
+        {
+            var contact = _ContactService.Add(new Contact()
+            {
+                IdContact = Guid.NewGuid(),
+                Name = "Mitch Marsh",
+                Role = "Security",
+                PhoneNumber = "555-982-5696",
+                ComChannel = 5
+            });
+            contact = _ContactService.Add(new Contact()
+            {
+                IdContact = Guid.NewGuid(),
+                Name = "Nick Spencer",
+                Role = "Medical",
+                PhoneNumber = "555-982-4876",
+                ComChannel = 4
+            });
+            contact = _ContactService.Add(new Contact()
+            {
+                IdContact = Guid.NewGuid(),
+                Name = "Collin O'Shagnasty",
+                Role = "Medical",
+                PhoneNumber = "555-982-4626",
+                ComChannel = 4
+            });
+            return Json(true);
+        }
+
+        public async Task<JsonResult> SendSMSMessageAsync()
+        {
+            // Your Account SID from twilio.com/console
+            var accountSid = "ACe41c624d47a1d067094dc7d5ec6849ec";
+            // Your Auth Token from twilio.com/console
+            var authToken = "0a922556ca8b1a7d0a85bec7aa971447";
+
+            TwilioClient.Init(accountSid, authToken);
+            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "symbol.png");
+
+            var uri = new Uri(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "symbol.png"));
+            var message = await MessageResource.CreateAsync(
+                to: new PhoneNumber("+18057056133"),
+                from: new PhoneNumber("+18053086371"),
+                body: "Sending an image",
+                mediaUrl: Promoter.ListOfOne((uri))); 
+
+
             return Json(true);
         }
 

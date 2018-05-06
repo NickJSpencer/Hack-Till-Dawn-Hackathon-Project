@@ -1,4 +1,6 @@
-﻿using HackTillDawnProject.Services;
+﻿using HackTillDawnProject.Models;
+using HackTillDawnProject.Models.JsonModels;
+using HackTillDawnProject.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,9 +12,11 @@ namespace HackTillDawnProject.Controllers
     public class NotificationController : Controller
     {
         private IFootageStorageService _FootageStorageService { get; }
-        public NotificationController(IFootageStorageService ifss)
+        private IContactService _ContactService;
+        public NotificationController(IFootageStorageService ifss, IContactService ics)
         {
             _FootageStorageService = ifss;
+            _ContactService = ics;
         }
 
         public JsonResult GetNotifications(string channel_id)
@@ -20,8 +24,31 @@ namespace HackTillDawnProject.Controllers
             Guid channel_guid;
             if(Guid.TryParse(channel_id, out channel_guid))
             {
+                List<FootageStorage> storages = _FootageStorageService.GetAllForChannel(channel_guid);
+                List<NotificationJson> notifications = new List<NotificationJson>();
+                foreach (FootageStorage storage in storages)
+                {
+                    NotificationJson notification = new NotificationJson
+                    {
+                        IdFootageStorage = storage.IdFootageStorage.ToString(),
+                        DateTimeCaptureStartUtc = storage.DateTimeCaptureStartUtc,
+                        DateTimeCaptureEndUtc = storage.DateTimeCaptureEndUtc,
+                        Tags = storage.Tags,
+                        TriggerDescription = storage.TriggerDescription,
+                        TriggerConfidencePercent = storage.TriggerConfidencePercent,
+                        FileLocation = storage.FileLocation,
+                        FileName = storage.FileName,
 
-                return Json(_FootageStorageService.GetAllForChannel(channel_guid));
+                        //APIResultTypeName = storage.APIResultType.Name,
+
+                        DeviceName = storage.FileName,
+
+                        is_read = storage.IsReviewed,
+                    };
+                    notifications.Add(notification);
+                }
+
+                return Json(notifications);
             }
             else
             {
@@ -33,7 +60,30 @@ namespace HackTillDawnProject.Controllers
                 });
             }
         }
+
+        public JsonResult GetAllContacts()
+        {
+            List<ContactJson> contactsJson = new List<ContactJson>();
+            List<Contact> contacts = _ContactService.GetAll();
+
+            foreach(Contact contact in contacts)
+            {
+                ContactJson contactJson = new ContactJson
+                {
+                    id = contact.IdContact.ToString(),
+                    name = contact.Name,
+                    role = contact.Role,
+                    phoneNumber = contact.PhoneNumber,
+                    comChannel = contact.ComChannel,
+                };
+                contactsJson.Add(contactJson);
+            }
+
+            return Json(contactsJson);
+        }
     }
+
+
 
 
     public class Result

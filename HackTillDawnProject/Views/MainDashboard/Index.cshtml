@@ -1,6 +1,8 @@
 ﻿
 <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <style>
 
 
@@ -103,17 +105,17 @@
     }
 
     .overlay {
-    /* full screen */
-    width: 100vw;
+        /* full screen */
+        width: 100vw;
         height: 100vh;
-    /* transparent black */
-    background: rgba(0, 0, 0, 0.8);
+        /* transparent black */
+        background: rgba(0, 0, 0, 0.8);
         position: fixed;
         top: 0;
         left: 0;
         display: none;
-    /* middle layer, i.e. appears below the sidebar */
-    z-index: 9998;
+        /* middle layer, i.e. appears below the sidebar */
+        z-index: 9998;
     }
 
     /*@@media (max-width: 768px) {
@@ -165,7 +167,6 @@
     }
 
     .wrapper {
-
     }
 
     @@media (min-width: 1200px) {
@@ -177,17 +178,31 @@
     .body-content {
         padding: 0px;
     }
-    .logo {
 
+    .logo {
     }
+
+    .active {
+        background-color: darkgray !important;
+        border: solid !important;
+        border-color: #999999 !important;
+        border-width: 1px !important;
+        /*box-shadow: 10px 10px 5px black;
+        -webkit-box-shadow: 10px 10px 5px black;
+        position: relative;
+        z-index: 10;*/
+    }
+
     .channel-bar {
         background-color: coral;
         width: 100%;
         padding: 15px;
     }
+
     .channel-bar-bin {
         display: flex;
     }
+
     .channel {
         border: solid;
         border-color: black;
@@ -203,14 +218,15 @@
     .sidebar {
         /*flex: 1;*/
         background-color: lightgray;
-        min-width: 200px;
+        min-width: 250px;
         min-height: 100vh;
-        max-width: 200px;
+        max-width: 250px;
     }
 
     .notification-bar {
         padding: 15px;
     }
+
     .notification-bar-bin {
         width: 150px;
     }
@@ -222,34 +238,81 @@
         cursor: pointer;
         max-width: 120px;
     }
+
     .content {
         flex: 10;
     }
 
     .bar {
         height: 5px;
-        
     }
+
     .title {
         background-color: coral;
         width: 100%;
         text-align: center;
-        font-size: 30px;
+        font-size: 16px;
+        padding: 10px;
     }
 
     .video-content {
         width: 100%;
         height: 100%;
     }
-    
+
+    .notification-details-header {
+        background-color: lightblue;
+        padding: 15px;
+    }
+
+    .notification-detail-tag {
+        /*background-color: lightblue;*/
+        padding: 5px;
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+    .notification-detail {
+        /*background-color: lightblue;*/
+        padding: 5px;
+        font-size: 20px;
+    }
+
+    .contacts {
+        padding: 15px;
+        background-color: darkgray;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .contacts-header {
+        padding: 15px;
+        font-weight: bold;
+        background-color: lightgray;
+    }
+
+    .contact-card {
+        padding: 10px;
+        cursor: pointer;
+    }
+
+        .contact-card:nth-child(2n+2) {
+            background-color: #f3f3f3;
+        }
 </style>
 <script type="text/javascript">
+
+
 
     angular.module('SafetyLens', ['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
     angular.module('SafetyLens').controller('MainDashboardController', function ($scope, $filter) {
         $scope.show_read = false;
+        $scope.show_notification = false;
+        $scope.show_contacts = false;
         $scope.currentNotification = null;
 
+        $scope.unreadNotifications = 0;
+        $scope.notifications = [];
         $scope.channels = [
             {
                 "name": "Channel Test"
@@ -259,16 +322,54 @@
             },
         ];
 
+        $scope.contacts = [];
+
+        $scope.updateUnreadNotifications = function () {
+            var count = 0;
+            for (i = 0; i < $scope.notifications.length; i++) {
+                var not = $scope.notifications[i];
+                if (not.is_read == false) {
+                    count++;
+                }
+            }
+            $scope.unreadNotifications = count;
+        }
+
+        $scope.clearRecipients = function () {
+            for (i = 0; i < $scope.contacts; i++) {
+                var contact = $scope.contacts[i];
+                contact.selected = false;
+            }
+        }
+
         $scope.GetAllNotifications = function () {
             $.ajax({
-                url: '@Url.Action("GetAllCurrentNotifications", "MainDashboard")',
+                url: '@Url.Action("GetNotifications", "Notification")',
                 type: 'POST',
                 cache: false,
                 dataType: 'json',
+                data: {
+                    channel_id: "502F0624-2439-4638-D4E9-08D5B3164FD1"
+                },
                 success: function (data) {
+                    for (i = 0; i < data.length; i++) {
+                        var dat = data[i];
+                        for (j = 0; j < $scope.notifications.length; j++) {
+                            var not = $scope.notifications[i];
+
+                            if (dat.idFootageStorage == not.idFootageStorage) {}
+                        }
+                    }
+
                     $scope.notifications = data;
-                    $scope.$apply();
-                    debugger;
+                    $scope.updateUnreadNotifications();
+
+                    for (i = 0; i < $scope.notifications.length; i++) {
+                        var not = $scope.notifications[i];
+                        var date = new Date(not.dateTimeCaptureStartUtc);
+                        not.timeElapsed = Math.round((Date.now() - date.getTime() + date.getTimezoneOffset() * 60 * 1000) / 1000 / 60);
+                    }
+                    //$scope.$apply();
                 },
                 failure: function (data) {
                     debugger;
@@ -276,14 +377,69 @@
             });
         }
 
-        $scope.viewNotification = function (notification) {
-            $scope.currentNotification = notification;
-            $scope.currentNotification.is_read = true;
-            //$scope.$apply();
+        $scope.GetAllContacts = function () {
+            $.ajax({
+                url: '@Url.Action("GetAllContacts", "Notification")',
+                type: 'POST',
+                cache: false,
+                dataType: 'json',
+                data: {
+                },
+                success: function (data) {
+                    $scope.contacts = data;
+                    for (i = 0; i < $scope.contacts.length; i++) {
+                        var contact = $scope.contacts[i];
+                        contact.selected = false;
+                    }
+                    $scope.$apply();
+                },
+                failure: function (data) {
+                    debugger;
+                },
+            });
+
         }
+
+        $scope.viewNotification = function (notification) {
+            if ($scope.currentNotification != null) {
+                $scope.currentNotification.is_read = true;
+            }
+
+            $scope.currentNotification = notification;
+            $scope.show_notification = true;
+            $scope.show_content = false;
+            $scope.updateUnreadNotifications();
+            $scope.clearRecipients();
+
+            $("#video").attr("src", "Stream/StreamMe?footage_id=" + $scope.currentNotification.idFootageStorage);
+            $("#video source").load();
+            $("#video")[0].play();
+        }
+
+        $scope.requestHelp = function () {
+            $("#myModal").modal();
+            $scope.currentNotification.is_read = true;
+            $scope.currentNotification = null;
+            $scope.show_contacts = false;
+            $scope.show_notification = false;
+            $scope.show_content = false;
+            $scope.updateUnreadNotifications();
+            $scope.clearRecipients();
+        }
+
+        $scope.activateToggle = function (index) {
+            debugger;
+
+            $("#checkbox" + index).bootstrapToggle();
+        }
+
+        setInterval(function () {
+            $scope.GetAllNotifications();
+        }, 2000);
 
         var init = function () {
             $scope.GetAllNotifications();
+            $scope.GetAllContacts();
         }
         init();
     });
@@ -293,58 +449,138 @@
 </script>
 <div ng-app="SafetyLens" ng-controller="MainDashboardController" ng-cloak>
     <div id="modal_container">
-    </div>
-    <div class="wrapper">
-        <div class="w3-bar w3-border w3-light-grey">
-            <a class="w3-bar-item w3-button w3-right" ng-repeat="channel in channels">{{channel.name}}</a>
-        </div>
-        @*<div class="channel-bar">
-            <div class="logo">
-
-            </div>
-            <div class="channel-bar-bin">
-                <div class="channel">Channel 1</div>
-            </div>
-        </div>*@
-        @*<div class="card" style="width: 18rem;">
-            <div class="card-header" >
-                Featured
-            </div>
-        </div>*@
-        <div class="sidebar-content-bin">
-            @*<div class="sidebar">
-                <div class="notification-bar">
-                    <div class="notification-bar-bin">
-                        <div class="notification" ng-repeat="notification in notifications">{{notification.name}}</div>
+        <div class="modal" id="myModal" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="modal_title" style="color: green;">Success</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                    <div class="modal-body">
+                        <p id="modal_content">
+                            The help request has been sent successfully!
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper">
+        @*<div class="w3-bar w3-border w3-light-grey">
+            <a class="w3-bar-item w3-button w3-right" ng-repeat="channel in channels">{{channel.name}}</a>
+        </div>*@
+        @*<div class="channel-bar">
+                <div class="logo">
+
+                </div>
+                <div class="channel-bar-bin">
+                    <div class="channel">Channel 1</div>
+                </div>
             </div>*@
+        @*<div class="card" style="width: 18rem;">
+                <div class="card-header" >
+                    Featured
+                </div>
+            </div>*@
+        <div class="sidebar-content-bin">
+            @*<div class="sidebar">
+                    <div class="notification-bar">
+                        <div class="notification-bar-bin">
+                            <div class="notification" ng-repeat="notification in notifications">{{notification.name}}</div>
+                        </div>
+                    </div>
+                </div>*@
             <div class="sidebar">
                 <div class="w3-bar w3-border w3-light-grey">
-                    <a class="w3-bar-item" style="text-align: center; font-size: 16px; font-weight: bold; width:100%; background-color: darkgray;">NOTIFICATIONS</a>
+                    <a class="w3-bar-item" style="text-align: center; font-size: 16px; font-weight: bold; width:100%; background-color: black; color: white;">NOTIFICATIONS</a>
                 </div>
                 <div class="w3-bar w3-border w3-light-grey" style="display: flex;">
-                    <a class="w3-bar-item w3-button w3-left" style="flex: 1;" ng-click="show_read = true;">Read</a>
-                    <a class="w3-bar-item w3-button w3-left" style="flex: 1;" ng-click="show_read = false;">Unread</a>
+                    <a class="w3-bar-item w3-button w3-left" style="flex: 1;" ng-class="{'active':show_read == true}" ng-click="show_read = true;">Read</a>
+                    <a class="w3-bar-item w3-button w3-left active" style="flex: 1;" ng-class="{'active':show_read == false}" ng-click="show_read = false;">Unread ({{unreadNotifications}})</a>
                 </div>
                 <div class="bar">
                 </div>
                 <div class="w3-bar w3-border w3-light-grey" ng-repeat="notification in notifications" ng-show="notification.is_read == show_read">
-                    <a class="w3-bar-item w3-button w3-left" style="width: 100%;" ng-click="viewNotification(notification)">{{notification.deviceName}}</a>
+                    <a class="w3-bar-item w3-button w3-left" style="width: 100%;" ng-class="{'active':currentNotification === notification}" ng-click="viewNotification(notification)">{{notification.deviceName}}</a>
                 </div>
             </div>
 
             <div class="content" id="content">
-                <div class="notification-content" ng-show="currentNotification != null">
-                    <div class="title" ng-model="currentNotification">
-                        {{currentNotification.deviceName}}
-                    </div>
+                <div class="notification-content" ng-show="show_notification == true && currentNotification != null" ng-model="currentNotification">
+                    @*<div class="title" ng-model="currentNotification">
+                            {{currentNotification.deviceName}}
+                        </div>*@
                     <div class="video-content">
-                        <video width="1700" height="800" controls>
-                            <source src="Stream/StreamMe" type="video/mp4">
-                            Your browser does not support the video tag.
+                        <video id="video" width="1280" height="720" controls>
+                            <source src="Stream/StreamMe?footage_id=10df3acf-1f81-4ce6-60bd-08d5b318cb0f" type="video/mp4">
                         </video>
                     </div>
+                    <div class="notification-details">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3"><div class="notification-detail-tag">Device Name:</div></div>
+                                    <div class="col-md-9"><div class="notification-detail">{{currentNotification.deviceName}}</div></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3"><div class="notification-detail-tag">Location:</div></div>
+                                    <div class="col-md-9"><div class="notification-detail">{{currentNotification.fileLocation}}</div></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3"><div class="notification-detail-tag">Time Occured:</div></div>
+                                    <div class="col-md-9"><div class="notification-detail">{{currentNotification.timeElapsed}} min(s) ago.</div></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3"><div class="notification-detail-tag">Certainty of Incident:</div></div>
+                                    <div class="col-md-9"><div class="notification-detail">{{currentNotification.triggerConfidencePercent}}%</div></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <button class="btn btn-warning" style="width: 250px; height: 80px;" ng-click="show_content = true; show_notification = false;" >REQUEST HELP</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="contact-content" ng-show="show_content == true && currentNotification != null" ng-model="currentNotification">
+                    <div class="contacts">
+                        Request Help For {{currentNotification.deviceName}}
+                    </div>
+                    <div class="contacts-header">
+                        <div class="row">
+                            <div class="col-md-2">Include In Request</div>
+                            <div class="col-md-2">Name</div>
+                            <div class="col-md-2">Role</div>
+                            <div class="col-md-2">Phone Number</div>
+
+                        </div>
+                    </div>
+                    <div class="contact-card" ng-repeat="contact in contacts" ng-class="{'active':contact.selected}" ng-click="contact.selected = !contact.selected">
+                        <div class="row">
+                            <div class="col-md-2"><input id="checkbox{{$index}}" type="checkbox" ng-model="contact.selected"></div>
+                            <div class="col-md-2">{{contact.name}}</div>
+                            <div class="col-md-2">{{contact.role}}</div>
+                            <div class="col-md-2">{{contact.phoneNumber}}</div>
+                            @*<div class="col-md-2"><input id="checkbox{{$index}}" type="checkbox" data-toggle="toggle" data-on="Request" data-off="No Action" data-width="100" data-onstyle="warning" ng-init="activateToggle($index)"></div>*@
+
+                        </div>
+
+
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2">
+                            <button class="btn btn-warning" style="width: 200px; height: 60px;" ng-click="requestHelp()">SEND REQUEST</button>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
