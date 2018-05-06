@@ -9,7 +9,7 @@ namespace HackTillDawnProject.Models
     {
         public Event()
         {
-            RegisteredDevices = new HashSet<RegisteredDevice>();
+            DeviceEventIntermediates = new HashSet<DeviceEventIntermediate>();
             Channels = new HashSet<Channel>();
             StaffEventIntermediates = new HashSet<StaffEventIntermediate>();
         }
@@ -19,7 +19,7 @@ namespace HackTillDawnProject.Models
         public DateTime? EventStart { get; set; }
         public DateTime? EventEnd { get; set; }
 
-        public ICollection<RegisteredDevice> RegisteredDevices { get; set; }
+        public ICollection<DeviceEventIntermediate> DeviceEventIntermediates { get; set; }
         public ICollection<StaffEventIntermediate> StaffEventIntermediates { get; set; }
         public ICollection<Channel> Channels { get; set; }
     }

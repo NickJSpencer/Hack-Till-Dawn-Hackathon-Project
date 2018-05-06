@@ -12,7 +12,7 @@ namespace HackTillDawnProject.Models
     {
         public Channel()
         {
-            Contacts = new HashSet<Contact>();
+            ChannelContactIntermediates = new HashSet<ChannelContactIntermediate>();
         }
         //PK
         public Guid IdChannel { get; set; }
@@ -23,6 +23,6 @@ namespace HackTillDawnProject.Models
         public Event Event { get; set; }
         public Guid EventId { get; set; }
 
-        public ICollection<Contact> Contacts { get; set; }
+        public ICollection<ChannelContactIntermediate> ChannelContactIntermediates { get; set; }
     }
 }

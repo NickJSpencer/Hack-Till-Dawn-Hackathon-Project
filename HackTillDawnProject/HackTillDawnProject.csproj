@@ -5,6 +5,11 @@
     <UserSecretsId>aspnet-HackTillDawnProject-FE4F1F97-5328-4019-AA79-C18482BA2E1D</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20180506001724_initial.cs" />
+    <Compile Remove="Data\Migrations\20180506001724_initial.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />

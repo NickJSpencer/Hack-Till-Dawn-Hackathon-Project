@@ -21,6 +21,11 @@ namespace HackTillDawnProject.Models
         public string FileLocation { get; set; }
         public string FileName { get; set; }
 
+        public RegisteredDevice RegisteredDevice { get; set; }
+        public Guid RegisteredDeviceId { get; set; }
+
+        public APIResultType APIResultType { get; set; }
+        public Guid APIResultTypeId { get; set; }
 
     }
 }

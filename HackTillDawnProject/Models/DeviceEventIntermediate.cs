@@ -14,6 +14,8 @@ namespace HackTillDawnProject.Models
         public RegisteredDevice RegisteredDevice { get; set; }
         public Guid IdRegisteredDeviceId { get; set; }
         //
-        
+
+        public string DeviceLocation { get; set; }
+
     }
 }
