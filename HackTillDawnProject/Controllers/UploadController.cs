@@ -26,6 +26,7 @@ namespace HackTillDawnProject.Controllers
         private IChannelService _ChannelService { get; }
         private IStaffEventIntermediateService _StaffEventIntermediateService { get; }
         private IContactService _ContactService { get; }
+        private IAWSService _AWSService { get; }
         private FootageManager _FootageManager { get; }
         public UploadController(FootageManager fm,
             IFootageStorageService ifss,
@@ -34,6 +35,7 @@ namespace HackTillDawnProject.Controllers
             IDeviceEventIntermediateService ideis,
             IEventService ies,
             IChannelContactService iccs,
+            IAWSService iawss,
             IChannelService ics,
             IStaffEventIntermediateService iseis,
             IContactService icos
@@ -45,6 +47,7 @@ namespace HackTillDawnProject.Controllers
             _APIResultTypeService = iapits;
             _DeviceEventIntermediateService = ideis;
             _EventService = ies;
+            _AWSService = iawss;
             _ChannelContactService = iccs;
             _ChannelService = ics;
             _StaffEventIntermediateService = iseis;
@@ -55,7 +58,20 @@ namespace HackTillDawnProject.Controllers
 
         public JsonResult UploadNotificationFootage(IFormFile video)
         {
-            throw new NotImplementedException();
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Videos", video.FileName);
+            using (FileStream fs = new FileStream(path, FileMode.Append))
+            {
+                FootageStorage NewFootage = new FootageStorage()
+                {
+                    FileName = video.FileName,
+                    FileLocation = path,
+                    APIResultTypeId = Guid.Parse("19FCC874-77CB-4B41-2BD1-08D5B31651E5")
+                };
+
+                video.OpenReadStream().CopyTo(fs);
+                _FootageStorageService.Add(NewFootage);
+            }
+            return Json(true);
         }
 
 
