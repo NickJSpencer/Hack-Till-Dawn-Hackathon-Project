@@ -5,10 +5,6 @@ VisualStudioVersion = 15.0.27428.2043
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HackTillDawnProject", "HackTillDawnProject\HackTillDawnProject.csproj", "{F8370394-961F-4E4D-B52C-B749CC54BD27}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KinesisLambda", "KinesisLambda\KinesisLambda.csproj", "{5019F16E-9B83-45A7-923B-ABE526352FC1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LambdaTest1", "LambdaTest1\LambdaTest1.csproj", "{6CADBDE7-7BD1-4591-8A87-E6F428C6A4F3}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,14 +15,6 @@ Global
 		{F8370394-961F-4E4D-B52C-B749CC54BD27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8370394-961F-4E4D-B52C-B749CC54BD27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8370394-961F-4E4D-B52C-B749CC54BD27}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5019F16E-9B83-45A7-923B-ABE526352FC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5019F16E-9B83-45A7-923B-ABE526352FC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5019F16E-9B83-45A7-923B-ABE526352FC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5019F16E-9B83-45A7-923B-ABE526352FC1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6CADBDE7-7BD1-4591-8A87-E6F428C6A4F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6CADBDE7-7BD1-4591-8A87-E6F428C6A4F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6CADBDE7-7BD1-4591-8A87-E6F428C6A4F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6CADBDE7-7BD1-4591-8A87-E6F428C6A4F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
