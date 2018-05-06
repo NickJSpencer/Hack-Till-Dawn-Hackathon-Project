@@ -184,6 +184,13 @@
 
     .active {
         background-color: darkgray !important;
+        border: solid !important;
+        border-color: #999999 !important;
+        border-width: 1px !important;
+        /*box-shadow: 10px 10px 5px black;
+        -webkit-box-shadow: 10px 10px 5px black;
+        position: relative;
+        z-index: 10;*/
     }
 
     .channel-bar {
@@ -211,9 +218,9 @@
     .sidebar {
         /*flex: 1;*/
         background-color: lightgray;
-        min-width: 200px;
+        min-width: 250px;
         min-height: 100vh;
-        max-width: 200px;
+        max-width: 250px;
     }
 
     .notification-bar {
@@ -285,7 +292,8 @@
     }
 
     .contact-card {
-        padding: 5px;
+        padding: 10px;
+        cursor: pointer;
     }
 
         .contact-card:nth-child(2n+2) {
@@ -293,6 +301,8 @@
         }
 </style>
 <script type="text/javascript">
+
+
 
     angular.module('SafetyLens', ['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
     angular.module('SafetyLens').controller('MainDashboardController', function ($scope, $filter) {
@@ -312,18 +322,7 @@
             },
         ];
 
-        $scope.contacts = [
-            {
-                "name": "Contact 1",
-                "role": "Role 1",
-                "phoneNumber": "555-555-5555"
-            },
-            {
-                "name": "Contact 2",
-                "role": "Role 2",
-                "phoneNumber": "555-555-5555"
-            },
-        ];
+        $scope.contacts = [];
 
         $scope.updateUnreadNotifications = function () {
             var count = 0;
@@ -336,6 +335,13 @@
             $scope.unreadNotifications = count;
         }
 
+        $scope.clearRecipients = function () {
+            for (i = 0; i < $scope.contacts; i++) {
+                var contact = $scope.contacts[i];
+                contact.selected = false;
+            }
+        }
+
         $scope.GetAllNotifications = function () {
             $.ajax({
                 url: '@Url.Action("GetNotifications", "Notification")',
@@ -346,6 +352,15 @@
                     channel_id: "502F0624-2439-4638-D4E9-08D5B3164FD1"
                 },
                 success: function (data) {
+                    for (i = 0; i < data.length; i++) {
+                        var dat = data[i];
+                        for (j = 0; j < $scope.notifications.length; j++) {
+                            var not = $scope.notifications[i];
+
+                            if (dat.idFootageStorage == not.idFootageStorage) {}
+                        }
+                    }
+
                     $scope.notifications = data;
                     $scope.updateUnreadNotifications();
 
@@ -354,9 +369,7 @@
                         var date = new Date(not.dateTimeCaptureStartUtc);
                         not.timeElapsed = Math.round((Date.now() - date.getTime() + date.getTimezoneOffset() * 60 * 1000) / 1000 / 60);
                     }
-                    debugger;
-
-                    $scope.$apply();
+                    //$scope.$apply();
                 },
                 failure: function (data) {
                     debugger;
@@ -364,24 +377,69 @@
             });
         }
 
+        $scope.GetAllContacts = function () {
+            $.ajax({
+                url: '@Url.Action("GetAllContacts", "Notification")',
+                type: 'POST',
+                cache: false,
+                dataType: 'json',
+                data: {
+                },
+                success: function (data) {
+                    $scope.contacts = data;
+                    for (i = 0; i < $scope.contacts.length; i++) {
+                        var contact = $scope.contacts[i];
+                        contact.selected = false;
+                    }
+                    $scope.$apply();
+                },
+                failure: function (data) {
+                    debugger;
+                },
+            });
+
+        }
+
         $scope.viewNotification = function (notification) {
             if ($scope.currentNotification != null) {
                 $scope.currentNotification.is_read = true;
             }
 
-
             $scope.currentNotification = notification;
             $scope.show_notification = true;
             $scope.show_content = false;
             $scope.updateUnreadNotifications();
+            $scope.clearRecipients();
 
             $("#video").attr("src", "Stream/StreamMe?footage_id=" + $scope.currentNotification.idFootageStorage);
             $("#video source").load();
             $("#video")[0].play();
         }
 
+        $scope.requestHelp = function () {
+            $("#myModal").modal();
+            $scope.currentNotification.is_read = true;
+            $scope.currentNotification = null;
+            $scope.show_contacts = false;
+            $scope.show_notification = false;
+            $scope.show_content = false;
+            $scope.updateUnreadNotifications();
+            $scope.clearRecipients();
+        }
+
+        $scope.activateToggle = function (index) {
+            debugger;
+
+            $("#checkbox" + index).bootstrapToggle();
+        }
+
+        setInterval(function () {
+            $scope.GetAllNotifications();
+        }, 2000);
+
         var init = function () {
             $scope.GetAllNotifications();
+            $scope.GetAllContacts();
         }
         init();
     });
@@ -391,11 +449,29 @@
 </script>
 <div ng-app="SafetyLens" ng-controller="MainDashboardController" ng-cloak>
     <div id="modal_container">
+        <div class="modal" id="myModal" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="modal_title" style="color: green;">Success</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                    <div class="modal-body">
+                        <p id="modal_content">
+                            The help request has been sent successfully!
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="wrapper">
-        <div class="w3-bar w3-border w3-light-grey">
+        @*<div class="w3-bar w3-border w3-light-grey">
             <a class="w3-bar-item w3-button w3-right" ng-repeat="channel in channels">{{channel.name}}</a>
-        </div>
+        </div>*@
         @*<div class="channel-bar">
                 <div class="logo">
 
@@ -457,10 +533,14 @@
                                     <div class="col-md-3"><div class="notification-detail-tag">Time Occured:</div></div>
                                     <div class="col-md-9"><div class="notification-detail">{{currentNotification.timeElapsed}} min(s) ago.</div></div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-3"><div class="notification-detail-tag">Certainty of Incident:</div></div>
+                                    <div class="col-md-9"><div class="notification-detail">{{currentNotification.triggerConfidencePercent}}%</div></div>
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="row">
-                                    <button class="btn btn-warning" style="width: 250px; height: 80px;" ng-click="show_content = true; show_notification = false;">REQUEST HELP</button>
+                                    <button class="btn btn-warning" style="width: 250px; height: 80px;" ng-click="show_content = true; show_notification = false;" >REQUEST HELP</button>
                                 </div>
                             </div>
                         </div>
@@ -474,19 +554,21 @@
                     </div>
                     <div class="contacts-header">
                         <div class="row">
+                            <div class="col-md-2">Include In Request</div>
                             <div class="col-md-2">Name</div>
                             <div class="col-md-2">Role</div>
                             <div class="col-md-2">Phone Number</div>
-                            <div class="col-md-2">Include In Request</div>
 
                         </div>
                     </div>
-                    <div class="contact-card" ng-repeat="contact in contacts">
+                    <div class="contact-card" ng-repeat="contact in contacts" ng-class="{'active':contact.selected}" ng-click="contact.selected = !contact.selected">
                         <div class="row">
+                            <div class="col-md-2"><input id="checkbox{{$index}}" type="checkbox" ng-model="contact.selected"></div>
                             <div class="col-md-2">{{contact.name}}</div>
                             <div class="col-md-2">{{contact.role}}</div>
                             <div class="col-md-2">{{contact.phoneNumber}}</div>
-                            <div class="col-md-2"><input type="checkbox" data-toggle="toggle" data-on="Request" data-off="No Action" data-width="100" data-onstyle="warning"></div>
+                            @*<div class="col-md-2"><input id="checkbox{{$index}}" type="checkbox" data-toggle="toggle" data-on="Request" data-off="No Action" data-width="100" data-onstyle="warning" ng-init="activateToggle($index)"></div>*@
+
                         </div>
 
 
@@ -495,7 +577,7 @@
                     <div class="row">
                         <div class="col-md-4"></div>
                         <div class="col-md-2">
-                            <button class="btn btn-warning" style="width: 200px; height: 60px;">SEND REQUEST</button>
+                            <button class="btn btn-warning" style="width: 200px; height: 60px;" ng-click="requestHelp()">SEND REQUEST</button>
                         </div>
                     </div>
 
