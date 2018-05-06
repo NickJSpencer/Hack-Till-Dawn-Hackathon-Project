@@ -33,8 +33,23 @@ namespace HackTillDawnProject
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            // Add application services.
+
+
+            //Database Services
+            services.AddScoped<IAPIResultTypeService, APIResultTypeService>();
+            services.AddScoped<IChannelContactService, ChannelContactService>();
+            services.AddScoped<IChannelService, ChannelService>();
+            services.AddScoped<IContactService, ContactService>();
+            services.AddScoped<IDeviceEventIntermediateService, DeviceEventIntermediateService>();
+            services.AddScoped<IEventService, EventService>();
+            services.AddScoped<IFootageStorageService, FootageStorageService>();
+            services.AddScoped<IRegisteredDeviceService, RegisteredDeviceService>();
+            services.AddScoped<IStaffEventIntermediateService, StaffEventIntermediateService>();
+
             services.AddTransient<IEmailSender, EmailSender>();
+            
+
+
 
             services.AddMvc();
         }
