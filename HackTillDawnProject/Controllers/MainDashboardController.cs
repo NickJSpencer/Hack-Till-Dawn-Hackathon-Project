@@ -41,7 +41,24 @@ namespace HackTillDawnProject.Controllers
 
                 APIResultTypeName = "Result Type",
 
-                DeviceName = "Device Name,",
+                DeviceName = "Device Name 1",
+
+                is_read = false,
+            };
+            notifications.Add(notification);
+            notification = new NotificationJson
+            {
+                DateTimeCaptureStartUtc = DateTime.UtcNow,
+                DateTimeCaptureEndUtc = DateTime.UtcNow,
+                Tags = "tags",
+                TriggerDescription = "Type of Trigger",
+                TriggerConfidencePercent = (decimal).50,
+                FileLocation = "FileLocation",
+                FileName = "Sample File",
+
+                APIResultTypeName = "Result Type",
+
+                DeviceName = "Device Name 2",
 
                 is_read = false,
             };

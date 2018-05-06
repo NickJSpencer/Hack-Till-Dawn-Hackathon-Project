@@ -180,6 +180,10 @@
     .logo {
 
     }
+
+    .active {
+        background-color: darkgray !important;
+    }
     .channel-bar {
         background-color: coral;
         width: 100%;
@@ -234,20 +238,58 @@
         background-color: coral;
         width: 100%;
         text-align: center;
-        font-size: 30px;
+        font-size: 16px;
+        padding: 10px;
     }
 
     .video-content {
         width: 100%;
         height: 100%;
     }
+
+    .notification-details-header {
+        background-color: lightblue;
+        padding: 15px;
+    }
+    .notification-detail-tag {
+        /*background-color: lightblue;*/
+        padding: 5px;
+        font-weight: bold;
+        font-size: 20px;
+    }
+    .notification-detail {
+        /*background-color: lightblue;*/
+        padding: 5px;
+        font-size: 20px;
+    }
     
+    .contacts {
+        padding: 15px;
+        background-color: darkgray;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .contacts-header {
+        padding: 15px;
+        font-weight: bold;
+        background-color: lightgray;
+    }
+
+    .contact-card {
+        padding: 5px;
+    }
+        .contact-card:nth-child(2n+2) {
+            background-color: #f3f3f3;
+        }
 </style>
 <script type="text/javascript">
 
     angular.module('SafetyLens', ['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
     angular.module('SafetyLens').controller('MainDashboardController', function ($scope, $filter) {
         $scope.show_read = false;
+        $scope.show_notification = false;
+        $scope.show_contacts = false;
         $scope.currentNotification = null;
 
         $scope.channels = [
@@ -256,6 +298,19 @@
             },
             {
                 "name": "Channel Test 2"
+            },
+        ];
+
+        $scope.contacts = [
+            {
+                "name": "Contact 1",
+                "role": "Role 1",
+                "phoneNumber": "555-555-5555"
+            },
+            {
+                "name": "Contact 2",
+                "role": "Role 2",
+                "phoneNumber": "555-555-5555"
             },
         ];
 
@@ -277,8 +332,12 @@
         }
 
         $scope.viewNotification = function (notification) {
+            if ($scope.currentNotification != null) {
+                $scope.currentNotification.is_read = true;
+            }
             $scope.currentNotification = notification;
-            $scope.currentNotification.is_read = true;
+            $scope.show_notification = true;
+            $scope.show_content = false;
             //$scope.$apply();
         }
 
@@ -321,29 +380,80 @@
             </div>*@
             <div class="sidebar">
                 <div class="w3-bar w3-border w3-light-grey">
-                    <a class="w3-bar-item" style="text-align: center; font-size: 16px; font-weight: bold; width:100%; background-color: darkgray;">NOTIFICATIONS</a>
+                    <a class="w3-bar-item" style="text-align: center; font-size: 16px; font-weight: bold; width:100%; background-color: black; color: white;">NOTIFICATIONS</a>
                 </div>
                 <div class="w3-bar w3-border w3-light-grey" style="display: flex;">
-                    <a class="w3-bar-item w3-button w3-left" style="flex: 1;" ng-click="show_read = true;">Read</a>
-                    <a class="w3-bar-item w3-button w3-left" style="flex: 1;" ng-click="show_read = false;">Unread</a>
+                    <a class="w3-bar-item w3-button w3-left" style="flex: 1;" ng-class="{'active':show_read == true}" ng-click="show_read = true;">Read</a>
+                    <a class="w3-bar-item w3-button w3-left active" style="flex: 1;" ng-class="{'active':show_read == false}" ng-click="show_read = false;">Unread</a>
                 </div>
                 <div class="bar">
                 </div>
                 <div class="w3-bar w3-border w3-light-grey" ng-repeat="notification in notifications" ng-show="notification.is_read == show_read">
-                    <a class="w3-bar-item w3-button w3-left" style="width: 100%;" ng-click="viewNotification(notification)">{{notification.deviceName}}</a>
+                    <a class="w3-bar-item w3-button w3-left" style="width: 100%;" ng-class="{'active':currentNotification === notification}" ng-click="viewNotification(notification)">{{notification.deviceName}}</a>
                 </div>
             </div>
 
             <div class="content" id="content">
-                <div class="notification-content" ng-show="currentNotification != null">
-                    <div class="title" ng-model="currentNotification">
+                <div class="notification-content" ng-show="show_notification == true && currentNotification != null" ng-model="currentNotification">
+                    @*<div class="title" ng-model="currentNotification">
                         {{currentNotification.deviceName}}
-                    </div>
+                    </div>*@
                     <div class="video-content">
-                        <video width="1700" height="800" controls>
+                        <video width="1280" height="720" controls>
                             <source src="Stream/StreamMe" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
+                    </div>
+                    <div class="notification-details">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="notification-detail-tag">Device Name:</div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="notification-detail">{{currentNotification.deviceName}}</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="notification-detail-tag">Location:</div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="notification-detail">{{currentNotification.fileLocation}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <button class="btn btn-warning" style="width: 250px; height: 80px;" ng-click="show_content = true; show_notification = false;">REQUEST HELP</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="contact-content" ng-show="show_content == true && currentNotification != null" ng-model="currentNotification">
+                    <div class="contacts">
+                        Request Help For {{currentNotification.deviceName}}
+                    </div>
+                    <div class="contacts-header">
+                        <div class="row">
+                            <div class="col-md-2">Name</div>
+                            <div class="col-md-2">Role</div>
+                            <div class="col-md-2">Phone Number</div>
+                        </div>
+                    </div>
+                    <div class="contact-card" ng-repeat="contact in contacts">
+                        <div class="row">
+                            <div class="col-md-2">{{contact.name}}</div>
+                            <div class="col-md-2">{{contact.role}}</div>
+                            <div class="col-md-2">{{contact.phoneNumber}}</div>
+                            <div class="col-md-2"><button class="btn btn-warning">SEND REQUEST</button></div>
+                        </div>
+
+
                     </div>
                 </div>
 
